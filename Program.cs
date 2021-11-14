@@ -8,11 +8,12 @@ public class Program
 {
     public static void Main()
     {
-        var timestamps = Seed(new TimeSpan(0, 0, 1));
+        var timestamps = new List<DateTime>();
+        MakeTransactions(new TimeSpan(0, 0, 1), timestamps);
         
         LookupCurrentPrice("Fuji Apple");
         
-        LookupPrices("Fuji Apple", timestamps[1], timestamps[3]);
+        LookupPrices("Fuji Apple", timestamps[1], timestamps[4]);
 
         FindOrder("Eddie Packing", timestamps[3]);
 
@@ -203,14 +204,13 @@ public class Program
         Console.WriteLine();
     }
 
-    private static List<DateTime> Seed(TimeSpan sleep)
+    private static List<DateTime> MakeTransactions(TimeSpan sleep, List<DateTime> timestamps)
     {
         using var context = new OrdersContext();
 
         context.Database.EnsureDeleted();
         context.Database.Migrate();
         
-        var timestamps = new List<DateTime>();
         Console.WriteLine("Starting event sourcing....");
 
         var customer = new Customer { Name = "Eddie Packing", Address = "123 Richmond" };
