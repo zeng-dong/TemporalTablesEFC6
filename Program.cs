@@ -211,7 +211,7 @@ public class Program
         context.Database.EnsureDeleted();
         context.Database.Migrate();
         
-        Console.WriteLine("Starting event sourcing....");
+        Console.WriteLine("Starting events....");
 
         var customer = new Customer { Name = "Eddie Packing", Address = "123 Richmond" };
         context.Customers.Add(customer);
