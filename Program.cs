@@ -19,18 +19,18 @@ public class Program
 
         LookupOrderQuantity("Eddie Packing", timestamps[1], timestamps[5]);
 
-        //DeleteCustomer("Eddie Packing");
-        //
-        //QueryCustomerAndOrderSnapshots();
-        //
-        //RestoreCustomer("Eddie Packing");
-        //
-        //QueryCustomerAndOrderSnapshots();
+        DeleteCustomer("Eddie Packing");
+        
+        QueryCustomerAndOrderSnapshots();
+        
+        RestoreCustomer("Eddie Packing");
+        
+        QueryCustomerAndOrderSnapshots();
     }
 
     private static void LookupCurrentPrice(string productName)
     {
-        using var context = new OrdersContext();
+        using var context = new OrdersContext(false);
 
         var product = context.Products.Single(product => product.Name == productName);
         
@@ -43,7 +43,7 @@ public class Program
 
     private static void LookupPrices(string productName, DateTime from, DateTime to)
     {
-        using var context = new OrdersContext();
+        using var context = new OrdersContext(false);
 
         Console.WriteLine($"Historical prices and codes for {productName} from {from} to {to}:");
 
@@ -73,7 +73,7 @@ public class Program
 
     private static void FindOrder(string customerName, DateTime on)
     {
-        using var context = new OrdersContext(log: true);
+        using var context = new OrdersContext(log: false);
 
         var order = context.Orders
             .TemporalAsOf(on)
@@ -94,7 +94,7 @@ public class Program
 
     private static void LookupOrderQuantity(string customerName, DateTime from, DateTime to)
     {
-        using var context = new OrdersContext();
+        using var context = new OrdersContext(false);
 
         Console.WriteLine($"Historical quantities for {customerName} from {from} to {to}:");
 
@@ -161,7 +161,7 @@ public class Program
 
     private static void QueryCustomerAndOrderSnapshots()
     {
-        using var context = new OrdersContext(log: true);
+        using var context = new OrdersContext(log: false);
 
         var customerSnapshots = context.Customers
             .TemporalAll()
@@ -206,12 +206,12 @@ public class Program
 
     private static List<DateTime> MakeTransactions(TimeSpan sleep, List<DateTime> timestamps)
     {
-        using var context = new OrdersContext();
+        using var context = new OrdersContext(false);
 
         context.Database.EnsureDeleted();
         context.Database.Migrate();
         
-        Console.WriteLine("Starting events....");
+        Console.WriteLine("Carrying out business operations ....");
 
         var customer = new Customer { Name = "Eddie Packing", Address = "123 Richmond" };
         context.Customers.Add(customer);
